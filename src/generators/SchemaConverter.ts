@@ -43,7 +43,7 @@ export class SchemaConverter {
 
     // Handle basic types
     const type = schema.type;
-
+    
     switch (type) {
       case 'string':
         return this.convertString(schema);
@@ -110,7 +110,7 @@ export class SchemaConverter {
     let zodSchema = z.number();
 
     if (schema.minimum !== undefined) {
-      zodSchema = schema.exclusiveMinimum
+      zodSchema = schema.exclusiveMinimum 
         ? zodSchema.gt(schema.minimum)
         : zodSchema.gte(schema.minimum);
     }
@@ -130,7 +130,7 @@ export class SchemaConverter {
     let zodSchema = z.number().int();
 
     if (schema.minimum !== undefined) {
-      zodSchema = schema.exclusiveMinimum
+      zodSchema = schema.exclusiveMinimum 
         ? zodSchema.gt(schema.minimum)
         : zodSchema.gte(schema.minimum);
     }
@@ -158,7 +158,7 @@ export class SchemaConverter {
       // This will return a ZodEffects type, which is still a ZodType
       zodSchema = zodSchema.refine(
         (items) => new Set(items).size === items.length,
-        { message: 'Array must contain unique items' },
+        { message: 'Array must contain unique items' }
       );
     }
 
@@ -172,7 +172,7 @@ export class SchemaConverter {
 
     for (const [key, propSchema] of Object.entries(properties)) {
       let zodProp = this.convert(propSchema);
-
+      
       // Make property optional if not in required array
       if (!required.includes(key)) {
         zodProp = zodProp.optional();
@@ -191,7 +191,7 @@ export class SchemaConverter {
     } else if (typeof schema.additionalProperties === 'object') {
       // Zod doesn't support typed additional properties directly
       // We'll use passthrough and add a custom refinement
-      const _additionalSchema = this.convert(schema.additionalProperties);
+      const additionalSchema = this.convert(schema.additionalProperties);
       zodSchema = z.object(shape).passthrough();
     }
 
@@ -202,7 +202,7 @@ export class SchemaConverter {
     // For allOf, we need to merge all schemas
     // Zod doesn't have a direct allOf, so we use intersection
     const zodSchemas = schemas.map(s => this.convert(s));
-
+    
     if (zodSchemas.length === 0) {
       return z.any();
     }
@@ -216,7 +216,7 @@ export class SchemaConverter {
 
   private convertOneOf(schemas: any[]): z.ZodType<any> {
     const zodSchemas = schemas.map(s => this.convert(s));
-
+    
     if (zodSchemas.length === 0) {
       return z.any();
     }

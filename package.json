@@ -1,6 +1,6 @@
 {
   "name": "swagger-mcp",
-  "version": "1.1.3",
+  "version": "1.1.2",
   "description": "MCP server for exposing Swagger/OpenAPI endpoints as tools",
   "main": "dist/index.js",
   "scripts": {
@@ -12,13 +12,7 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
-  "keywords": [
-    "mcp",
-    "swagger",
-    "openapi",
-    "api",
-    "tools"
-  ],
+  "keywords": ["mcp", "swagger", "openapi", "api", "tools"],
   "author": "Your Name <your.email@example.com>",
   "repository": {
     "type": "git",
@@ -40,20 +34,18 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
     "axios": "^1.11.0",
-    "dotenv": "^17.2.1",
     "openapi-types": "^12.1.3",
     "swagger-parser": "^10.0.3",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "dotenv": "^17.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
     "eslint": "^9.17.0",
-    "globals": "^16.3.0",
     "jest": "^30.0.5",
+    "@types/jest": "^30.0.0",
     "ts-jest": "^29.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"

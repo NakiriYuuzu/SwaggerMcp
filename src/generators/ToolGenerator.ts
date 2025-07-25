@@ -34,18 +34,18 @@ export class ToolGenerator {
     // Use operationId if available and well-formed
     if (operation.operationId && operation.operationId.includes('-')) {
       let name = operation.operationId.toLowerCase();
-
+      
       // Add prefix if provided
       if (this.toolPrefix) {
         name = `${this.toolPrefix}-${name}`;
       }
-
+      
       return name;
     }
-
+    
     // Generate name in format: method-path-group-endpoint
     const method = operation.method.toLowerCase();
-
+    
     // Parse path components
     const pathParts = operation.path
       .split('/')
@@ -58,14 +58,14 @@ export class ToolGenerator {
         return part;
       })
       .map(part => part.toLowerCase());
-
+    
     // Build the tool name: method + all path parts
     const nameParts = [method, ...pathParts];
-
+    
     // Join with hyphens and clean up
     let name = nameParts
       .join('-')
-      .replace(/[^a-zA-Z0-9-]/g, '') // Remove invalid characters except hyphens
+      .replace(/[^a-zA-Z0-9\-]/g, '') // Remove invalid characters except hyphens
       .replace(/-+/g, '-') // Collapse multiple hyphens
       .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
 
@@ -96,7 +96,7 @@ export class ToolGenerator {
 
   private generateToolDescription(operation: ApiOperation): string {
     let description = operation.description || operation.summary || '';
-
+    
     if (!description) {
       description = `${operation.method} request to ${operation.path}`;
     }
@@ -106,7 +106,7 @@ export class ToolGenerator {
       const paramDescriptions = operation.parameters
         .map(p => `- ${p.name} (${p.in}${p.required ? ', required' : ''}): ${p.description || 'No description'}`)
         .join('\n');
-
+      
       description += `\n\nParameters:\n${paramDescriptions}`;
     }
 
@@ -132,7 +132,7 @@ export class ToolGenerator {
       const jsonContent = operation.requestBody.content['application/json'];
       if (jsonContent && jsonContent.schema) {
         const bodySchema = this.schemaConverter.convert(jsonContent.schema);
-
+        
         // If request body is required, merge its properties into the main shape
         // Otherwise, make it optional
         if (operation.requestBody.required) {

@@ -22,7 +22,7 @@ class Logger {
     if (LOG_LEVELS[level] >= this.level) {
       const timestamp = new Date().toISOString();
       const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
-
+      
       switch (level) {
         case 'error':
           console.error(prefix, message, ...args);

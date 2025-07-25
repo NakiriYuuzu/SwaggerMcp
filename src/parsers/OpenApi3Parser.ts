@@ -18,7 +18,7 @@ export class OpenApi3Parser extends SwaggerParser {
   parse(): ParsedSwaggerDoc {
     const version = this.document.openapi.startsWith('3.0') ? '3.0' : '3.1';
     logger.info(`Parsing OpenAPI ${version} document`);
-
+    
     return {
       version: version as '3.0' | '3.1',
       title: this.document.info.title,
@@ -81,19 +81,19 @@ export class OpenApi3Parser extends SwaggerParser {
 
   protected extractOperations(): ApiOperation[] {
     const operations: ApiOperation[] = [];
-
+    
     if (!this.document.paths) {
       return operations;
     }
 
     for (const [path, pathItem] of Object.entries(this.document.paths)) {
-      if (!pathItem) {continue;}
+      if (!pathItem) continue;
 
       const methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head', 'trace'] as const;
-
+      
       for (const method of methods) {
         const operation = (pathItem as any)[method] as OpenAPI3Operation | undefined;
-        if (!operation) {continue;}
+        if (!operation) continue;
 
         const apiOperation: ApiOperation = {
           operationId: operation.operationId || this.generateOperationId(method, path),
@@ -117,12 +117,12 @@ export class OpenApi3Parser extends SwaggerParser {
 
   private convertParameters(
     operationParams: (OpenAPI3Parameter | OpenAPIV3.ReferenceObject)[],
-    pathParams: (OpenAPI3Parameter | OpenAPIV3.ReferenceObject)[],
+    pathParams: (OpenAPI3Parameter | OpenAPIV3.ReferenceObject)[]
   ): ApiParameter[] {
     // Merge path-level and operation-level parameters
     const allParams = [...pathParams, ...operationParams];
     const uniqueParams = new Map<string, OpenAPI3Parameter>();
-
+    
     // Operation parameters override path parameters
     for (const param of allParams) {
       // Resolve references if needed (simplified - in production, use a proper $ref resolver)
@@ -144,16 +144,16 @@ export class OpenApi3Parser extends SwaggerParser {
   }
 
   private convertRequestBody(
-    requestBody?: OpenAPIV3.RequestBodyObject | OpenAPIV3_1.RequestBodyObject | OpenAPIV3.ReferenceObject,
+    requestBody?: OpenAPIV3.RequestBodyObject | OpenAPIV3_1.RequestBodyObject | OpenAPIV3.ReferenceObject
   ): ApiRequestBody | undefined {
     if (!requestBody) {
       return undefined;
     }
 
     // Resolve reference if needed
-    const resolvedBody = this.resolveReference(requestBody) as
+    const resolvedBody = this.resolveReference(requestBody) as 
       OpenAPIV3.RequestBodyObject | OpenAPIV3_1.RequestBodyObject;
-
+    
     if (!resolvedBody) {
       return undefined;
     }
@@ -166,7 +166,7 @@ export class OpenApi3Parser extends SwaggerParser {
   }
 
   private convertResponses(
-    responses?: OpenAPIV3.ResponsesObject | OpenAPIV3_1.ResponsesObject,
+    responses?: OpenAPIV3.ResponsesObject | OpenAPIV3_1.ResponsesObject
   ): Record<string, ApiResponse> {
     if (!responses) {
       return {};
@@ -175,9 +175,9 @@ export class OpenApi3Parser extends SwaggerParser {
     const converted: Record<string, ApiResponse> = {};
 
     for (const [statusCode, response] of Object.entries(responses)) {
-      const resolvedResponse = this.resolveReference(response) as
+      const resolvedResponse = this.resolveReference(response) as 
         OpenAPIV3.ResponseObject | OpenAPIV3_1.ResponseObject;
-
+      
       if (resolvedResponse && 'description' in resolvedResponse) {
         converted[statusCode] = {
           description: resolvedResponse.description,

@@ -1,4 +1,5 @@
 import { OpenAPIDocument, ParsedSwaggerDoc, ApiOperation } from '../types';
+import { logger } from '../utils/logger';
 
 export abstract class SwaggerParser {
   protected document: OpenAPIDocument;
@@ -10,17 +11,15 @@ export abstract class SwaggerParser {
   // Factory method to create appropriate parser
   static create(document: OpenAPIDocument): SwaggerParser {
     const version = SwaggerParser.detectVersion(document);
-
+    
     switch (version) {
-      case '2.0': {
+      case '2.0':
         const { OpenApi2Parser } = require('./OpenApi2Parser');
         return new OpenApi2Parser(document);
-      }
       case '3.0':
-      case '3.1': {
+      case '3.1':
         const { OpenApi3Parser } = require('./OpenApi3Parser');
         return new OpenApi3Parser(document);
-      }
       default:
         throw new Error(`Unsupported OpenAPI version: ${version}`);
     }
@@ -46,7 +45,7 @@ export abstract class SwaggerParser {
   // Common method to extract operations
   protected extractOperations(): ApiOperation[] {
     const operations: ApiOperation[] = [];
-
+    
     // This will be implemented differently by each subclass
     // but provides a common interface
     return operations;
@@ -66,7 +65,7 @@ export abstract class SwaggerParser {
         }
         return part;
       });
-
+    
     const operationId = method.toLowerCase() + pathParts
       .map((part, index) => {
         if (index === 0) {
@@ -75,7 +74,7 @@ export abstract class SwaggerParser {
         return part.charAt(0).toUpperCase() + part.slice(1);
       })
       .join('');
-
+    
     return operationId;
   }
 

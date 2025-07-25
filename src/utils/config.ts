@@ -10,21 +10,21 @@ const configSchema = z.object({
     url: z.string().url().optional(),
     path: z.string().optional(),
   }).refine(data => data.url || data.path, {
-    message: 'Either SWAGGER_URL or SWAGGER_PATH must be provided',
+    message: "Either SWAGGER_URL or SWAGGER_PATH must be provided"
   }),
-
+  
   api: z.object({
     baseUrl: z.string().url().optional(),
     timeout: z.number().positive().default(30000),
   }),
-
+  
   auth: z.object({
     type: z.enum(['bearer', 'apikey', 'basic', 'none']).default('none'),
     token: z.string().optional(),
     header: z.string().default('Authorization'),
     apiKeyHeader: z.string().default('X-API-Key'),
   }),
-
+  
   options: z.object({
     refreshInterval: z.number().positive().default(3600000), // 1 hour
     logLevel: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
@@ -70,5 +70,4 @@ export function loadConfig(): Config {
 }
 
 // Export singleton config instance
-// Only load config when not in test environment
-export const appConfig = process.env.NODE_ENV === 'test' ? null : loadConfig();
+export const appConfig = loadConfig();

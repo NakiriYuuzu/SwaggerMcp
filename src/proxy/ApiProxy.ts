@@ -12,7 +12,7 @@ export class ApiProxy {
   constructor(baseUrl: string, authManager: AuthManager) {
     this.baseUrl = this.normalizeBaseUrl(baseUrl);
     this.authManager = authManager;
-
+    
     this.axiosInstance = axios.create({
       baseURL: this.baseUrl,
       timeout: appConfig.api.timeout,
@@ -31,7 +31,7 @@ export class ApiProxy {
       (error) => {
         logger.error('Request error:', error);
         return Promise.reject(error);
-      },
+      }
     );
 
     // Add response interceptor for logging
@@ -41,7 +41,7 @@ export class ApiProxy {
           response.config.method?.toUpperCase() || 'GET',
           response.config.url || '',
           response.status,
-          response.data,
+          response.data
         );
         return response;
       },
@@ -51,13 +51,13 @@ export class ApiProxy {
             error.config?.method?.toUpperCase() || 'GET',
             error.config?.url || '',
             error.response.status,
-            error.response.data,
+            error.response.data
           );
         } else {
           logger.error('Response error:', error.message);
         }
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -85,7 +85,7 @@ export class ApiProxy {
     if (operation.parameters) {
       for (const param of operation.parameters) {
         const value = params[param.name];
-
+        
         // Skip undefined optional parameters
         if (value === undefined && !param.required) {
           continue;
@@ -97,15 +97,15 @@ export class ApiProxy {
             url = url.replace(`{${param.name}}`, encodeURIComponent(value));
             config.url = url;
             break;
-
+          
           case 'query':
             config.params![param.name] = value;
             break;
-
+          
           case 'header':
             config.headers![param.name] = value;
             break;
-
+          
           case 'cookie':
             // Cookies are typically handled by the browser/client
             logger.warn(`Cookie parameter ${param.name} is not directly supported`);
@@ -118,13 +118,13 @@ export class ApiProxy {
     if (operation.requestBody) {
       // Collect all parameters that aren't path/query/header
       const bodyData: Record<string, any> = {};
-
+      
       for (const [key, value] of Object.entries(params)) {
         // Skip if this parameter was already handled
         const isHandledParam = operation.parameters?.some(
-          p => p.name === key && ['path', 'query', 'header', 'cookie'].includes(p.in),
+          p => p.name === key && ['path', 'query', 'header', 'cookie'].includes(p.in)
         );
-
+        
         if (!isHandledParam && value !== undefined) {
           bodyData[key] = value;
         }
@@ -154,29 +154,29 @@ export class ApiProxy {
         // Server responded with error status
         const status = error.response.status;
         const data = error.response.data;
-
+        
         throw new Error(
           `API request failed: ${operation.method} ${operation.path} returned ${status}. ` +
-          `Response: ${JSON.stringify(data)}`,
+          `Response: ${JSON.stringify(data)}`
         );
       } else if (error.request) {
         // Request was made but no response received
         throw new Error(
           `API request failed: ${operation.method} ${operation.path} - No response received. ` +
-          `Error: ${error.message}`,
+          `Error: ${error.message}`
         );
       } else {
         // Error in request setup
         throw new Error(
           `API request setup failed: ${operation.method} ${operation.path}. ` +
-          `Error: ${error.message}`,
+          `Error: ${error.message}`
         );
       }
     } else {
       // Non-Axios error
       throw new Error(
         `Unexpected error during API request: ${operation.method} ${operation.path}. ` +
-        `Error: ${error.message || error}`,
+        `Error: ${error.message || error}`
       );
     }
   }
