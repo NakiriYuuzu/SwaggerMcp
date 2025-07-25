@@ -1,9 +1,10 @@
 {
   "name": "@yuuzu/swagger-mcp",
-  "version": "1.1.11",
+  "version": "1.1.18",
   "description": "MCP server for exposing Swagger/OpenAPI endpoints as tools",
   "main": "dist/index.js",
   "scripts": {
+    "win": "tsc",
     "build": "tsc && chmod 755 dist/index.js",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",

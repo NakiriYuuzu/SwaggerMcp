@@ -62,7 +62,8 @@ export function loadConfig(): Config {
     return configSchema.parse(rawConfig);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('Configuration validation failed:', error.errors);
+      // Write to stderr to avoid interfering with MCP protocol on stdout
+      process.stderr.write(`Configuration validation failed: ${JSON.stringify(error.errors)}\n`);
       throw new Error(`Invalid configuration: ${error.errors.map(e => e.message).join(', ')}`);
     }
     throw error;

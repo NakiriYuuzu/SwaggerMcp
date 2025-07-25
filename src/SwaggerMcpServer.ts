@@ -88,6 +88,9 @@ export class SwaggerMcpServer {
       // Fix duplicate operationIds before validation
       this.fixDuplicateOperationIds(document);
 
+      // Fix host field format issues in Swagger 2.0 documents
+      this.fixHostFieldFormat(document);
+
       // Validate and dereference the document
       const validated = await SwaggerParser.validate(document as any);
       const dereferenced = await SwaggerParser.dereference(validated as any);
@@ -130,18 +133,34 @@ export class SwaggerMcpServer {
 
     const definitions = this.swaggerDoc.securitySchemes;
     const generator = new ToolGenerator(definitions);
+    const nameCount = new Map<string, number>();
 
     for (const operation of this.swaggerDoc.operations) {
       try {
         const tool = generator.generateTool(operation);
-        this.tools.set(tool.name, tool);
-        logger.debug(`Generated tool: ${tool.name}`);
+        let finalName = tool.name;
+        
+        // Handle duplicate tool names by adding a suffix
+        if (this.tools.has(finalName)) {
+          const count = nameCount.get(tool.name) || 1;
+          nameCount.set(tool.name, count + 1);
+          finalName = `${tool.name}-${count + 1}`;
+          
+          logger.warn(`Duplicate tool name detected: '${tool.name}' → '${finalName}' (${operation.method} ${operation.path})`);
+        } else {
+          nameCount.set(tool.name, 1);
+        }
+        
+        // Update the tool with the final name
+        const finalTool = { ...tool, name: finalName };
+        this.tools.set(finalName, finalTool);
+        logger.debug(`Generated tool: ${finalName} (${operation.method} ${operation.path})`);
       } catch (error) {
         logger.error(`Failed to generate tool for operation ${operation.operationId}:`, error);
       }
     }
 
-    logger.info(`Generated ${this.tools.size} tools from Swagger operations`);
+    logger.info(`Generated ${this.tools.size} tools from ${this.swaggerDoc.operations.length} Swagger operations`);
   }
 
   private registerTools(): void {
@@ -275,6 +294,36 @@ export class SwaggerMcpServer {
 
     if (fixedCount > 0) {
       logger.info(`Fixed ${fixedCount} duplicate operationIds in Swagger document`);
+    }
+  }
+
+  private fixHostFieldFormat(document: any): void {
+    // This method fixes host field format issues in Swagger 2.0 documents
+    // where the host field contains a path (which should be in basePath instead)
+    
+    if (document.swagger === '2.0' && document.host && typeof document.host === 'string') {
+      const hostValue = document.host;
+      
+      // Check if host contains a path (indicated by '/' character)
+      if (hostValue.includes('/')) {
+        const parts = hostValue.split('/');
+        const actualHost = parts[0];
+        const pathPart = '/' + parts.slice(1).join('/');
+        
+        logger.warn(`Fixing malformed host field: '${hostValue}' → host: '${actualHost}', basePath: '${pathPart}'`);
+        
+        // Update host to contain only domain and port
+        document.host = actualHost;
+        
+        // Combine with existing basePath if present
+        const existingBasePath = document.basePath || '';
+        const combinedBasePath = pathPart + existingBasePath;
+        
+        // Remove duplicate slashes
+        document.basePath = combinedBasePath.replace(/\/+/g, '/');
+        
+        logger.info(`Host field fixed - New host: '${document.host}', New basePath: '${document.basePath}'`);
+      }
     }
   }
 

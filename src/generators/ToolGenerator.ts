@@ -40,27 +40,25 @@ export class ToolGenerator {
         name = `${this.toolPrefix}-${name}`;
       }
       
-      return name;
+      // Ensure name doesn't exceed 64 characters
+      return this.truncateToolName(name);
     }
     
-    // Generate name in format: method-path-group-endpoint
+    // Generate name in format: method-meaningful-path-parts (excluding parameters)
     const method = operation.method.toLowerCase();
     
-    // Parse path components
+    // Parse path components, skip common prefixes and parameters
     const pathParts = operation.path
       .split('/')
       .filter(part => part.length > 0)
-      .map(part => {
-        // Handle path parameters: {id} -> id
-        if (part.startsWith('{') && part.endsWith('}')) {
-          return part.slice(1, -1);
-        }
-        return part;
-      })
+      .filter(part => !['api', 'v1', 'v2', 'v3'].includes(part.toLowerCase())) // Skip common API prefixes
+      .filter(part => !(part.startsWith('{') && part.endsWith('}'))) // Remove parameters like {id}, {BeginDate}, etc.
       .map(part => part.toLowerCase());
     
-    // Build the tool name: method + all path parts
-    const nameParts = [method, ...pathParts];
+    // Build the tool name: method + meaningful path parts (excluding parameters)
+    // Join all meaningful parts to create a descriptive name
+    const meaningfulParts = pathParts.length > 0 ? pathParts : ['unknown'];
+    const nameParts = [method, ...meaningfulParts];
     
     // Join with hyphens and clean up
     let name = nameParts
@@ -74,7 +72,50 @@ export class ToolGenerator {
       name = `${this.toolPrefix}-${name}`;
     }
 
-    return name;
+    // Ensure name doesn't exceed 64 characters
+    return this.truncateToolName(name);
+  }
+
+  private truncateToolName(name: string): string {
+    const maxLength = 64;
+    
+    if (name.length <= maxLength) {
+      return name;
+    }
+    
+    // Try to truncate intelligently by removing less important parts
+    // Priority: keep method bracket, keep last part (endpoint), truncate middle parts
+    
+    const parts = name.split('-');
+    if (parts.length <= 2) {
+      // Simple truncation if we can't break it down further
+      return name.substring(0, maxLength);
+    }
+    
+    // Keep first part (method) and last part (endpoint), truncate middle
+    const firstPart = parts[0];
+    const lastPart = parts[parts.length - 1];
+    const middleParts = parts.slice(1, -1);
+    
+    let truncatedName = `${firstPart}-${lastPart}`;
+    
+    // Add back middle parts if there's room
+    for (const part of middleParts) {
+      const testName = `${firstPart}-${part}-${lastPart}`;
+      if (testName.length <= maxLength) {
+        truncatedName = testName;
+        break;
+      }
+    }
+    
+    // Final safety check
+    if (truncatedName.length > maxLength) {
+      truncatedName = truncatedName.substring(0, maxLength);
+    }
+    
+    logger.warn(`Tool name truncated: '${name}' → '${truncatedName}' (${truncatedName.length}/64 chars)`);
+    
+    return truncatedName;
   }
 
   private generateToolTitle(operation: ApiOperation): string {

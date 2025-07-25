@@ -23,16 +23,12 @@ class Logger {
       const timestamp = new Date().toISOString();
       const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
       
-      switch (level) {
-        case 'error':
-          console.error(prefix, message, ...args);
-          break;
-        case 'warn':
-          console.warn(prefix, message, ...args);
-          break;
-        default:
-          console.log(prefix, message, ...args);
-      }
+      // Write all logs to stderr to avoid interfering with MCP protocol on stdout
+      const logMessage = `${prefix} ${message}${args.length > 0 ? ' ' + args.map(arg => 
+        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+      ).join(' ') : ''}\n`;
+      
+      process.stderr.write(logMessage);
     }
   }
 
