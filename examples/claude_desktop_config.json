@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "swagger-mcp": {
+      "command": "node",
+      "args": ["D:/Coding/js/SwaggerMcp/dist/index.js"],
+      "env": {
+        "SWAGGER_URL": "https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json",
+        "AUTH_TYPE": "bearer",
+        "AUTH_TOKEN": "your-jwt-token-here",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}
