@@ -4,8 +4,9 @@
       "command": "node",
       "args": ["D:/Coding/js/SwaggerMcp/dist/index.js"],
       "env": {
-        "SWAGGER_URL": "https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json",
-        "AUTH_TYPE": "bearer",
+        "SWAGGER_URL": "https://xxx.com/swagger.json",
+        "API_BASE_URL": "https://xxx.com/",
+        "AUTH_TYPE": "none",
         "AUTH_TOKEN": "your-jwt-token-here",
         "LOG_LEVEL": "info"
       }

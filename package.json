@@ -1,6 +1,6 @@
 {
   "name": "swagger-mcp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "MCP server for exposing Swagger/OpenAPI endpoints as tools",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,23 @@
     "clean": "rm -rf dist"
   },
   "keywords": ["mcp", "swagger", "openapi", "api", "tools"],
-  "author": "",
+  "author": "Your Name <your.email@example.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/swagger-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/swagger-mcp/issues"
+  },
+  "homepage": "https://github.com/your-username/swagger-mcp#readme",
+  "bin": {
+    "swagger-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "package.json"
+  ],
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",

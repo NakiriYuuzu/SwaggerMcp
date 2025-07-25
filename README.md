@@ -47,7 +47,7 @@ cp .env.sample .env
 
 ```env
 # Swagger 文檔來源（擇一）
-SWAGGER_URL=https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json
+SWAGGER_URL=https://api.example.com/swagger.json
 # 或使用本地檔案
 # SWAGGER_PATH=/path/to/swagger.json
 
@@ -74,7 +74,7 @@ LOG_LEVEL=info
       "command": "node",
       "args": ["D:\\Coding\\js\\SwaggerMcp\\dist\\index.js"],
       "env": {
-        "SWAGGER_URL": "https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json",
+        "SWAGGER_URL": "https://api.example.com/swagger.json",
         "AUTH_TYPE": "bearer",
         "AUTH_TOKEN": "your-jwt-token-here"
       }
@@ -132,12 +132,12 @@ Claude: 我會使用 post-api-auth-signin 工具來幫您登入。
 
 #### API_BASE_URL 設定說明
 
-某些 Swagger 文檔（如 GeoSense API）使用相對 URL 作為服務器地址（例如 `/ApiManagement`）。在這種情況下，您需要設定 `API_BASE_URL` 來指定完整的 API 基礎 URL：
+某些 Swagger 文檔使用相對 URL 作為服務器地址（例如 `/api`）。在這種情況下，您需要設定 `API_BASE_URL` 來指定完整的 API 基礎 URL：
 
 ```env
-# GeoSense API 範例
-SWAGGER_URL=https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json
-API_BASE_URL=https://projects.geosense.tw/ApiManagement
+# 使用相對 URL 的 API 範例
+SWAGGER_URL=https://example.com/api/swagger.json
+API_BASE_URL=https://example.com/api
 ```
 
 ## 支援的認證方式

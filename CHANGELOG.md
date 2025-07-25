@@ -41,7 +41,7 @@
 
 ### Added
 - Better documentation for API_BASE_URL configuration
-- Specific instructions for handling APIs with relative server URLs (like GeoSense API)
+- Instructions for handling APIs with relative server URLs
 
 ## [1.0.1] - 2025-07-25
 

@@ -40,3 +40,5 @@ coverage/
 *.tmp
 *.temp
 .cache/
+nul
+test-*.js

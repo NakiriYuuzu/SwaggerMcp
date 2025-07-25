@@ -58,17 +58,16 @@ AUTH_TOKEN=your-token-here
 
 ## 測試範例
 
-使用 GeoSense API：
+使用一般 Swagger API：
 
 ```json
 {
   "mcpServers": {
-    "geosense-api": {
+    "swagger-api": {
       "command": "node",
       "args": ["D:/Coding/js/SwaggerMcp/dist/index.js"],
       "env": {
-        "SWAGGER_URL": "https://projects.geosense.tw/ApiManagement/swagger/v1/swagger.json",
-        "API_BASE_URL": "https://projects.geosense.tw/ApiManagement",
+        "SWAGGER_URL": "https://api.example.com/swagger.json",
         "AUTH_TYPE": "bearer",
         "AUTH_TOKEN": "your-jwt-token",
         "LOG_LEVEL": "debug"
@@ -78,7 +77,7 @@ AUTH_TOKEN=your-token-here
 }
 ```
 
-**重要提示**：GeoSense API 使用相對 URL（`/ApiManagement`），所以必須設定 `API_BASE_URL`。
+**提示**：如果 API 使用相對 URL，請設定 `API_BASE_URL` 環境變數。
 
 啟動後，您可以在 Claude 中說：
 - "列出所有可用的 API"
