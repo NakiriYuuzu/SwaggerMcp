@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.5] - 2025-07-25
+
+### Fixed
+- Cleaned up codebase by removing ESLint from scripts
+- Fixed various code quality issues
+- Ensured proper build process
+
+### Changed
+- Updated repository URL to use lowercase username
+- Improved code organization and structure
+- Enhanced tool generation logic for better operationId handling
+
 ## [1.1.1] - 2025-07-25
 
 ### 🔧 Critical Fix
