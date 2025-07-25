@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8] - 2025-07-25
+
+### Fixed
+- Fixed NPM publishing error for scoped package
+- Added publishConfig with public access to package.json
+- Updated GitHub Actions to publish with --access public flag
+
 ## [1.1.7] - 2025-07-25
 
 ### Changed
