@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.6] - 2025-07-25
+
+### Fixed
+- Fixed NPM package.json bin field formatting issue
+- Corrected bin path to use relative path instead of absolute
+
+### Changed
+- Ran `npm pkg fix` to address NPM publishing warnings
+
 ## [1.1.5] - 2025-07-25
 
 ### Fixed

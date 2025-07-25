@@ -1,6 +1,6 @@
 {
   "name": "swagger-mcp",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "MCP server for exposing Swagger/OpenAPI endpoints as tools",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,13 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
-  "keywords": ["mcp", "swagger", "openapi", "api", "tools"],
+  "keywords": [
+    "mcp",
+    "swagger",
+    "openapi",
+    "api",
+    "tools"
+  ],
   "author": "Your Name <your.email@example.com>",
   "repository": {
     "type": "git",
@@ -22,7 +28,7 @@
   },
   "homepage": "https://github.com/nakiriyuuzu/swagger-mcp#readme",
   "bin": {
-    "swagger-mcp": "./dist/index.js"
+    "swagger-mcp": "dist/index.js"
   },
   "files": [
     "dist/",
