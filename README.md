@@ -1,4 +1,4 @@
-# SwaggerMcp
+# @yuuzu/swagger-mcp
 
 基於 [TypeScript SDK MCP](https://github.com/modelcontextprotocol/typescript-sdk) 的 Swagger/OpenAPI MCP 服務器。此工具能夠從 Swagger/OpenAPI 文檔動態生成 MCP 工具，讓 Claude Desktop 可以直接調用 REST API。
 
@@ -22,7 +22,14 @@
 
 ```bash
 # Clone 專案
-git clone https://github.com/your-username/swagger-mcp.git
+# 使用 npx（推薦）
+npx @yuuzu/swagger-mcp
+
+# 或全域安裝
+npm install -g @yuuzu/swagger-mcp
+
+# 或從源碼安裝
+git clone https://github.com/nakiriyuuzu/swagger-mcp.git
 cd swagger-mcp
 
 # 安裝依賴
@@ -70,8 +77,8 @@ LOG_LEVEL=info
 {
   "mcpServers": {
     "swagger-mcp": {
-      "command": "node",
-      "args": ["D:\\Coding\\js\\SwaggerMcp\\dist\\index.js"],
+      "command": "npx",
+      "args": ["@yuuzu/swagger-mcp"],
       "env": {
         "SWAGGER_URL": "https://api.example.com/swagger.json",
         "AUTH_TYPE": "bearer",

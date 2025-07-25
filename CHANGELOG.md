@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.7] - 2025-07-25
+
+### Changed
+- Changed package name to scoped package `@yuuzu/swagger-mcp`
+- Updated installation instructions to use npx
+- Updated Claude Desktop configuration examples
+
+### Added
+- Support for installing via `npx @yuuzu/swagger-mcp`
+- Global installation option via npm
+
 ## [1.1.6] - 2025-07-25
 
 ### Fixed

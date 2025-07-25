@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "swagger-mcp": {
-      "command": "node",
-      "args": ["D:/Coding/js/SwaggerMcp/dist/index.js"],
+      "command": "npx",
+      "args": ["@yuuzu/swagger-mcp"],
       "env": {
         "SWAGGER_URL": "https://xxx.com/swagger.json",
         "API_BASE_URL": "https://xxx.com/",

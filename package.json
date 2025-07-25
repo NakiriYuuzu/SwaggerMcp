@@ -1,6 +1,6 @@
 {
-  "name": "swagger-mcp",
-  "version": "1.1.6",
+  "name": "@yuuzu/swagger-mcp",
+  "version": "1.1.7",
   "description": "MCP server for exposing Swagger/OpenAPI endpoints as tools",
   "main": "dist/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "api",
     "tools"
   ],
-  "author": "Your Name <your.email@example.com>",
+  "author": "nakiriyuuzu",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nakiriyuuzu/swagger-mcp.git"

@@ -1,14 +1,23 @@
-# SwaggerMcp 快速開始指南
+# @yuuzu/swagger-mcp 快速開始指南
 
-## 1. 安裝依賴
+## 1. 安裝 (擇一)
 
+### 使用 npx（推薦）
+無需安裝，直接使用：
 ```bash
-npm install
+npx @yuuzu/swagger-mcp
 ```
 
-## 2. 建構專案
-
+### 全域安裝
 ```bash
+npm install -g @yuuzu/swagger-mcp
+```
+
+### 從源碼安裝
+```bash
+git clone https://github.com/nakiriyuuzu/swagger-mcp.git
+cd swagger-mcp
+npm install
 npm run build
 ```
 
@@ -64,8 +73,8 @@ AUTH_TOKEN=your-token-here
 {
   "mcpServers": {
     "swagger-api": {
-      "command": "node",
-      "args": ["D:/Coding/js/SwaggerMcp/dist/index.js"],
+      "command": "npx",
+      "args": ["@yuuzu/swagger-mcp"],
       "env": {
         "SWAGGER_URL": "https://api.example.com/swagger.json",
         "AUTH_TYPE": "bearer",
