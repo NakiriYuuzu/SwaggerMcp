@@ -1,21 +1,30 @@
 import { loadConfig } from './config';
 
+// Mock dotenv to prevent console.log output
+jest.mock('dotenv', () => ({
+  config: jest.fn(),
+}));
+
 describe('Config', () => {
   const originalEnv = process.env;
+  const originalConsoleError = console.error;
 
   beforeEach(() => {
     jest.resetModules();
     process.env = { ...originalEnv };
+    // Mock console.error to suppress expected error output
+    console.error = jest.fn();
   });
 
   afterAll(() => {
     process.env = originalEnv;
+    console.error = originalConsoleError;
   });
 
   it('should throw error when neither SWAGGER_URL nor SWAGGER_PATH is provided', () => {
     delete process.env.SWAGGER_URL;
     delete process.env.SWAGGER_PATH;
-    
+
     expect(() => {
       loadConfig();
     }).toThrow();
@@ -30,7 +39,7 @@ describe('Config', () => {
     process.env.ENABLE_REQUEST_LOGGING = 'true';
 
     const config = loadConfig();
-    
+
     expect(config.swagger.url).toBe('https://example.com/swagger.json');
     expect(config.auth.type).toBe('bearer');
     expect(config.auth.token).toBe('test-token');
@@ -47,7 +56,7 @@ describe('Config', () => {
     delete process.env.ENABLE_REQUEST_LOGGING;
 
     const config = loadConfig();
-    
+
     expect(config.auth.type).toBe('none');
     expect(config.api.timeout).toBe(30000);
     expect(config.options.refreshInterval).toBe(3600000);

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.3] - 2025-07-25
+
+### Fixed
+- Fixed Jest configuration to support Node.js 20+
+- Added ESLint v9 configuration for code quality
+- Suppressed expected console output in tests
+- Fixed various ESLint errors and warnings
+
+### Changed
+- Removed all GeoSense-specific references
+- Updated examples to use generic API URLs
+- Updated Node.js requirement to >= 20.14
+- Updated CI workflow to test on Node.js 20.x, 22.x, and 24.x
+
+## [1.1.2] - 2025-07-25
+
+### Added
+- GitHub Actions workflows for CI/CD
+- NPM publishing configuration
+- Basic unit tests for configuration module
+
+### Changed
+- Prepared package for NPM distribution with bin configuration
+
 ## [1.1.1] - 2025-07-25
 
 ### 🔧 Critical Fix

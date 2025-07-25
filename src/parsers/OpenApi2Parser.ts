@@ -13,7 +13,7 @@ export class OpenApi2Parser extends SwaggerParser {
 
   parse(): ParsedSwaggerDoc {
     logger.info('Parsing OpenAPI 2.0 document');
-    
+
     return {
       version: '2.0',
       title: this.document.info.title,
@@ -29,9 +29,9 @@ export class OpenApi2Parser extends SwaggerParser {
     const scheme = schemes[0];
     const host = this.document.host || '';
     const basePath = this.document.basePath || '';
-    
+
     logger.debug(`OpenAPI 2.0 - scheme: ${scheme}, host: ${host}, basePath: ${basePath}`);
-    
+
     // If host is empty or incomplete, try to extract from SWAGGER_URL
     if (!host || !host.includes('.')) {
       const swaggerUrl = process.env.SWAGGER_URL;
@@ -48,7 +48,7 @@ export class OpenApi2Parser extends SwaggerParser {
         }
       }
     }
-    
+
     const baseUrl = `${scheme}://${host}${basePath}`;
     logger.info(`Extracted base URL: ${baseUrl}`);
     return baseUrl;
@@ -56,19 +56,19 @@ export class OpenApi2Parser extends SwaggerParser {
 
   protected extractOperations(): ApiOperation[] {
     const operations: ApiOperation[] = [];
-    
+
     if (!this.document.paths) {
       return operations;
     }
 
     for (const [path, pathItem] of Object.entries(this.document.paths)) {
-      if (!pathItem) continue;
+      if (!pathItem) {continue;}
 
       const methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'] as const;
-      
+
       for (const method of methods) {
         const operation = pathItem[method];
-        if (!operation) continue;
+        if (!operation) {continue;}
 
         const apiOperation: ApiOperation = {
           operationId: operation.operationId || this.generateOperationId(method, path),
@@ -77,8 +77,8 @@ export class OpenApi2Parser extends SwaggerParser {
           summary: operation.summary,
           description: operation.description,
           parameters: this.convertParameters(
-            operation.parameters || [], 
-            Array.isArray(pathItem.parameters) ? pathItem.parameters : []
+            operation.parameters || [],
+            Array.isArray(pathItem.parameters) ? pathItem.parameters : [],
           ),
           requestBody: this.convertRequestBody(operation),
           responses: this.convertResponses(operation.responses),
@@ -95,12 +95,12 @@ export class OpenApi2Parser extends SwaggerParser {
 
   private convertParameters(
     operationParams: (OpenAPIV2.Parameter | OpenAPIV2.ReferenceObject)[],
-    pathParams: (OpenAPIV2.Parameter | OpenAPIV2.ReferenceObject)[]
+    pathParams: (OpenAPIV2.Parameter | OpenAPIV2.ReferenceObject)[],
   ): ApiParameter[] {
     // Merge path-level and operation-level parameters
     const allParams = [...(pathParams || []), ...(operationParams || [])];
     const uniqueParams = new Map<string, OpenAPIV2.Parameter>();
-    
+
     // Operation parameters override path parameters
     for (const param of allParams) {
       // Skip reference objects for now (would need proper $ref resolution)
@@ -129,7 +129,7 @@ export class OpenApi2Parser extends SwaggerParser {
     if ('schema' in param) {
       return (param as OpenAPIV2.InBodyParameterObject).schema;
     }
-    
+
     // For non-body parameters, construct schema from type info
     const schema: any = {
       type: (param as any).type,
@@ -156,7 +156,7 @@ export class OpenApi2Parser extends SwaggerParser {
 
   private convertRequestBody(operation: OpenAPIV2.OperationObject): ApiRequestBody | undefined {
     const bodyParam = operation.parameters?.find(
-      param => 'in' in param && param.in === 'body'
+      param => 'in' in param && param.in === 'body',
     ) as OpenAPIV2.InBodyParameterObject | undefined;
 
     if (!bodyParam) {

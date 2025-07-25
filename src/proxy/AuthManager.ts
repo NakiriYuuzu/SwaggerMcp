@@ -24,7 +24,7 @@ export class AuthManager {
       case 'bearer':
         if (this.authConfig.token) {
           config.headers[this.authConfig.header] = `Bearer ${this.authConfig.token}`;
-          logger.debug(`Applied Bearer token authentication`);
+          logger.debug('Applied Bearer token authentication');
         } else {
           logger.warn('Bearer auth configured but no token provided');
         }
@@ -44,7 +44,7 @@ export class AuthManager {
           // Token should be in format "username:password"
           const encoded = Buffer.from(this.authConfig.token).toString('base64');
           config.headers[this.authConfig.header] = `Basic ${encoded}`;
-          logger.debug(`Applied Basic authentication`);
+          logger.debug('Applied Basic authentication');
         } else {
           logger.warn('Basic auth configured but no credentials provided');
         }
