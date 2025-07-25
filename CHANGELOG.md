@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.1.10] - 2025-07-25
+
+### Changed
+- Refactored to follow @yuuzu/mssql-mcp project structure
+- Changed bin command from `swagger-mcp` to `swagger-mcp-server`
+- Updated GitHub Actions workflow to match best practices
+- Simplified package structure by removing separate bin directory
+
+### Fixed
+- Improved cross-platform compatibility
+- Better npx execution support
+
+## [1.1.9] - 2025-07-25
+
+### Fixed
+- Fixed npx execution issue on Windows
+- Added proper bin scripts for cross-platform compatibility
+- Created dedicated bin directory with platform-specific launchers
+
+### Added
+- bin/swagger-mcp for Unix-like systems
+- bin/swagger-mcp.cmd for Windows systems
+
 ## [1.1.8] - 2025-07-25
 
 ### Fixed
