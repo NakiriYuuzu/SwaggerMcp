@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.11] - 2025-07-25
+
+### Fixed
+- Added executable permissions to compiled index.js for proper npx execution
+- Updated build script to include `chmod 755` command following Mssql-Mcp pattern
+- Resolved npx execution issues on Unix-like systems
+
 ## [1.1.10] - 2025-07-25
 
 ### Changed
