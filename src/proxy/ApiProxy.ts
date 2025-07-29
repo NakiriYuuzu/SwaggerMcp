@@ -17,7 +17,6 @@ export class ApiProxy {
       baseURL: this.baseUrl,
       timeout: appConfig.api.timeout,
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
     });
@@ -25,6 +24,15 @@ export class ApiProxy {
     // Add request interceptor for logging
     this.axiosInstance.interceptors.request.use(
       (config) => {
+        // Always log the full request details for debugging
+        const fullUrl = config.baseURL ? `${config.baseURL}${config.url}` : config.url;
+        logger.info(`Making API request: ${config.method?.toUpperCase()} ${fullUrl}`);
+        if (config.params && Object.keys(config.params).length > 0) {
+          logger.info(`Query parameters: ${JSON.stringify(config.params)}`);
+        }
+        if (config.headers) {
+          logger.info(`Request headers: ${JSON.stringify(config.headers)}`);
+        }
         logger.request(config.method?.toUpperCase() || 'GET', config.url || '', config.data);
         return config;
       },
@@ -80,6 +88,24 @@ export class ApiProxy {
       params: {},
       headers: {},
     };
+
+    // Check if this is a JSONP endpoint (has callback parameter)
+    const hasCallbackParam = operation.parameters?.some(
+      p => p.name === 'callback' && p.in === 'query'
+    );
+    
+    // For JSONP endpoints, adjust headers
+    if (hasCallbackParam) {
+      config.headers!['Accept'] = 'application/javascript, application/json, */*';
+    }
+    
+    // For GET requests, ensure no Content-Type header
+    if (config.method === 'get') {
+      delete config.headers!['Content-Type'];
+    } else if (!config.headers!['Content-Type']) {
+      // Set Content-Type for non-GET requests if not already set
+      config.headers!['Content-Type'] = 'application/json';
+    }
 
     // Process parameters
     if (operation.parameters) {
@@ -143,8 +169,28 @@ export class ApiProxy {
   }
 
   private handleResponse(response: AxiosResponse): any {
-    // Return the response data directly
-    // In a more sophisticated implementation, we might validate against the response schema
+    // Check if this is a JSONP response
+    const contentType = response.headers['content-type'];
+    if (contentType && contentType.includes('javascript')) {
+      // Parse JSONP response
+      const data = response.data;
+      if (typeof data === 'string') {
+        // Extract JSON from JSONP callback
+        // Format: callbackName({...json data...})
+        const jsonMatch = data.match(/^[^(]*\((.*)\)[^)]*$/);
+        if (jsonMatch && jsonMatch[1]) {
+          try {
+            return JSON.parse(jsonMatch[1]);
+          } catch (e) {
+            logger.error('Failed to parse JSONP response:', e);
+            // Return the raw response if parsing fails
+            return data;
+          }
+        }
+      }
+    }
+    
+    // Return the response data directly for non-JSONP responses
     return response.data;
   }
 

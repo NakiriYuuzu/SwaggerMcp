@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.1.21] - 2025-07-29
+
+### Fixed
+- Removed unnecessary Content-Type header from GET requests
+- Fixed header configuration that was causing JSONP API requests to fail
+- Enhanced request logging to show all headers for better debugging
+
+### Technical Details
+- Removed default `Content-Type: application/json` header from axios instance
+- Added logic to exclude Content-Type header for GET requests
+- Only sets Content-Type for non-GET requests when needed
+- Improved debugging with detailed request header logging
+
+## [1.1.20] - 2025-07-29
+
+### Added
+- **JSONP Support**: Added support for JSONP APIs that require callback parameters
+- Automatic detection of JSONP endpoints based on callback parameter presence
+- Proper handling and parsing of JSONP responses wrapped in callback functions
+
+### Fixed
+- Fixed API requests failing with 500 errors for JSONP endpoints
+- Improved Accept header handling for APIs returning `application/javascript`
+- Added JSONP response parsing to extract JSON data from JavaScript callbacks
+
+### Technical Details
+- Modified `buildRequestConfig()` to detect JSONP endpoints and adjust Accept headers
+- Added JSONP response parsing in `handleResponse()` method
+- Supports both standard JSON and JSONP callback-wrapped responses
+- Automatically extracts JSON from responses in format: `callbackName({...json...})`
+
+## [1.1.19] - 2025-07-25
+
+### Fixed
+- Enhanced dotenv stdout suppression to completely prevent any output during environment variable loading
+- Wrapped dotenv config() call to suppress all potential stdout writes
+- Ensures MCP protocol remains clean without JSON parsing errors
+
+### Technical Details
+- Modified config.ts to temporarily override process.stdout.write during dotenv loading
+- Prevents "[dotenv@17..." error messages from contaminating MCP communication
+- Maintains clean JSON-RPC communication channel for Claude Desktop
+
 ## [1.1.18] - 2025-07-25
 
 ### Changed

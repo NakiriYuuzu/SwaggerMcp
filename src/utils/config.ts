@@ -2,7 +2,14 @@ import { config } from 'dotenv';
 import { z } from 'zod';
 
 // Load environment variables
-config();
+// Suppress any potential stdout output during loading
+const originalWrite = process.stdout.write;
+process.stdout.write = () => true;
+try {
+  config();
+} finally {
+  process.stdout.write = originalWrite;
+}
 
 // Define configuration schema
 const configSchema = z.object({
